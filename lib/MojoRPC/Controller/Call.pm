@@ -16,17 +16,23 @@ sub call {
   my $parameters = $self->param('params');  
   my $class = $self->param('class');
 
-  my $parameter_parser = MojoRPC::Parameters->new(parameter_type => $parameter_type, parameters => $parameters);
-  my $method_chain = MojoRPC::MethodChain->new(class => $class, methods => $parameter_parser->parse());
+  my $parameter_parser = MojoRPC::Parameters->new({parameter_type => $parameter_type, parameters => $parameters});
+  my $method_chain = MojoRPC::MethodChain->new({class => $class, methods => $parameter_parser->parse()});
 
+  my $result;
   eval {
-    my $result = $method_chain->result();
-  }
+    $result = $method_chain->result();
+  };
   if($@) {
-    $self->render_400($@);
+    if($self->app->mojo_mode eq "development") {
+      $self->render_400($@);
+    }
+    else {
+      $self->render_500("Something went wrong");
+    }  
   }
 
-  my $response_formatter = MojoRPC::ResponseFormatter->new({ method_return_value => $result })
+  my $response_formatter = MojoRPC::ResponseFormatter->new({ method_return_value => $result });
   $self->render_json($response_formatter->json);
 }
 
@@ -39,10 +45,10 @@ sub validate_params {
   my $validation_rules = [
      [qw/class method/] => Validate::Tiny::is_required(),   
      class          => sub { eval "require ". $self->param('class') ? undef : "Class not found" },
-  ]
+  ];
 
   unless( $self->do_validation($validation_rules) ) {
-    $self->render_400($self->validator_any_error);
+    $self->render_500($self->validator_any_error);
     return undef;
   }
   return $self->$next(@_);

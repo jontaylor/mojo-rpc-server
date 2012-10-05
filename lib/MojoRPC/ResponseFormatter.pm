@@ -8,11 +8,11 @@ sub json {
   my $self = shift;
 
   my $response_hash = {};
-  $response_hash->{data} = $return_value;
-  if(blessed $return_value) {
-    my $id = $return_value->can('id') ? $return_value->id() : $return_value->{id};
+  $response_hash->{data} = $self->method_return_value;
+  if(blessed $self->method_return_value) {
+    my $id = $self->method_return_value->can('id') ? $self->method_return_value->id() : $self->method_return_value->{id};
     $response_hash->{id} = $id if $id;
-    $response_hash->{class} = ref($return_value);
+    $response_hash->{class} = ref($self->method_return_value);
   }
 
   return $response_hash;

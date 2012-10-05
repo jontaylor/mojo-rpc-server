@@ -55,14 +55,14 @@ sub call_on_class {
   my $return_value;
   if(blessed $class) { $class = ref($class) }
 
-  my $method_call = $class."::".$method;
+  my $method_call = $class."::".$self->method_name;
 
   no strict 'refs';
   if($self->expects_array) {
-    $return_value = [ &$method_call (@parameters) ];
+    $return_value = [ &$method_call ($self->parameter_array) ];
   }
   else {
-    $return_value = &$method_call (@parameters);
+    $return_value = &$method_call ($self->parameter_array);
   }    
   use strict 'refs';  
 
@@ -73,16 +73,21 @@ sub call_on_object {
   my $self = shift;
   my $object = shift;
   my $return_value;
-  my $method = $self->method();
+  my $method = $self->method_name();
 
   if($self->expects_array) {
-    $return_value = [ $object->$method (@parameters) ];
+    $return_value = [ $object->$method ($self->parameter_array) ];
   }
   else {
-    $return_value = $object->$method (@parameters);
+    $return_value = $object->$method ($self->parameter_array);
   }
 
   return $return_value;
+}
+
+sub parameter_array {
+  my $self = shift;
+  return @{ $self->parameters };
 }
 
 sub check_permissions {
@@ -90,7 +95,7 @@ sub check_permissions {
   my $object_or_class = shift;
 
   if(my $method_ref = $object_or_class->can('rpc_server_rights')) {
-    $object_or_class->$method_ref($self->method(), $self->role());
+    $object_or_class->$method_ref($self->method_name(), $self->role());
   }
 
 

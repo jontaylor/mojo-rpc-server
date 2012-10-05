@@ -30,9 +30,9 @@ sub valid {
 sub class_name {
   my $self = shift;
   if(blessed $self->class) {
-    return ref($class);
+    return ref($self->class);
   }
-  return $class;
+  return $self->class;
 }
 
 sub valid_class {

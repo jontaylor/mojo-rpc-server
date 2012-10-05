@@ -11,6 +11,7 @@ sub startup {
   $self->_load_apikeys();
   $self->_load_routing();
   $self->plugin('ValidateTiny');
+  $self->_add_paths_to_inc();
 }
 
 #Have a reasonable go at converting ANY blessed reference to a json compatible hash
