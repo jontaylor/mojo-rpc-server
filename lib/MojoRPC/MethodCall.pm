@@ -85,48 +85,12 @@ sub call_on_object {
   return $return_value;
 }
 
-sub call_method {
-  my $self = shift;
-  my $class = shift;
-  my $method = shift;
-  my @parameters = @_;
-  my $return_value;
-
-  my $sub_type = $method =~ /->/ ? "method" : "function";
-
-  no strict 'refs';
-  if($sub_type eq "function") {
-    
-    my $method_call = $class.$method;
-
-    if($self->request_object->wants eq "list") {
-      $return_value = [ &$method_call (@parameters) ];
-    }
-    else {
-      $return_value = &$method_call (@parameters);
-    }  
-        
-  }
-  else {
-    $method =~ s/->//g;
-    if($self->request_object->wants eq "list") {
-      $return_value = [ $class->$method (@parameters) ];
-    }
-    else {
-      $return_value = $class->$method (@parameters);
-    }  
-  }
-  use strict 'refs';  
-
-  return $return_value;
-}
-
 sub check_permissions {
   my $self = shift;
   my $object_or_class = shift;
 
-  if($object_or_class->can('rpc_server_rights')) {
-    # $object_or_class::rpc_
+  if(my $method_ref = $object_or_class->can('rpc_server_rights')) {
+    $object_or_class->$method_ref($self->method(), $self->role());
   }
 
 

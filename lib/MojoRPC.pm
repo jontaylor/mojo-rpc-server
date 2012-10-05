@@ -9,7 +9,6 @@ sub startup {
 
   $self->_load_config();
   $self->_load_apikeys();
-  $self->_load_authentication();
   $self->_load_routing();
   $self->plugin('ValidateTiny');
 }
@@ -55,6 +54,9 @@ sub _load_apikeys {
       $app->res->headers->header('WWW-Authenticate' => 'Basic realm="Secure Area"');
       $app->render(status=>401, text => "Invalid API KEY");
     } 
+    my $user = (split(':', $request_api_key))[0];
+
+    $app->stash({role => $user});
 
   });
 }
@@ -65,22 +67,6 @@ sub _load_routing {
 
   $r->namespace('MojoRPC::Controller');
   $r->route('/call/:parameter_type/:class/:params', params => qr/.*/)->to(controller => 'Call', action => 'call', params => undef);
-}
-
-sub _load_authentication {
-  my $self = shift;
- 
-  $self->plugin('authentication' => {
-      'autoload_user' => 1,
-      'session_key' => 'th1sISaSESSIONk3y',
-      'load_user' => sub { return undef; },
-      'validate_user' => sub {
-        my ($app, $username, $password, $extradata) = @_; 
-        
-        return undef;
-      },
-      'current_user_fn' => 'user', # compatibility with old code
-  });
 }
 
 sub _add_paths_to_inc {
