@@ -17,14 +17,15 @@ sub startup {
 }
 
 #Have a reasonable go at converting ANY blessed reference to a json compatible hash
+#Might remove this method as its dirty and its specific to modules you might not be using
 sub UNIVERSAL::TO_JSON {
   my $self = shift;
 
   if($self->can('get_columns')) {
-    return {$self->get_columns()};
+    return {$self->get_columns()}; #Dbix::Class
   }
   if($self->can('summary_hash')) {
-    return $self->summary_hash();
+    return $self->summary_hash(); #some other DB ORM
   }
 
   return { %$self };
