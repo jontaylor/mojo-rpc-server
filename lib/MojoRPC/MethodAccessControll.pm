@@ -1,22 +1,14 @@
-package MojoRPC::Request;
+package MojoRPC::MethodAccessControll;
 use Mojo::Base -base;
-use Scalar::Util;
+use Scalar::Util qw(blessed);
 
-has [qw(db method request_type class )];
+has [qw( method class )];
 
 our $whitelist;
 
-my $valid_requests = {
-  'acc4billing::locations' => {
-    find_by_postcode => 'scalar',
-    find_by_postcode_nospace => 'scalar',
-    new => 'scalar',
-    search => 'scalar',
-    '->new' => 'scalar',
-    '->find_by_primary_key' => 'scalar'        
-  },
-
-};
+sub set_whitelist {
+  $whitelist = shift;
+}
 
 sub whitelist {
   return $whitelist;
@@ -46,7 +38,4 @@ sub valid_method {
   $self->whitelist->{$self->class_name}->{$self->method};
 }
 
-sub wants {
-  my $self = shift;
-  return $valid_requests->{$self->db}->{$self->class}->{methods}->{$self->method};
-}
+1;

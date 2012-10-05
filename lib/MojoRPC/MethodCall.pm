@@ -1,5 +1,6 @@
 package MojoRPC::MethodCall;
 use Mojo::Base -base;
+use MojoRPC::MethodAccessControll;
 use Scalar::Util qw(blessed);
 
 has [qw( method_name parameters call_type wants )];
@@ -29,6 +30,10 @@ sub add_parameter {
 sub call_on {
   my $self = shift;
   my $object_or_class = shift;
+
+  unless($self->check_permissions($object_or_class)) {
+    die "Access to method " . $self->method_name .  " is not permitted on " . $object_or_class;
+  }
 
   if($self->is_a_class_method) {
     $self->call_on_class($object_or_class);
@@ -94,10 +99,8 @@ sub check_permissions {
   my $self = shift;
   my $object_or_class = shift;
 
-  if(my $method_ref = $object_or_class->can('rpc_server_rights')) {
-    $object_or_class->$method_ref($self->method_name(), $self->role());
-  }
-
+  my $access_control = MojoRPC::MethodAccessControll->new({ method => $self->method_name, class=> $object_or_class});
+  return $access_control->valid();
 
 }
 

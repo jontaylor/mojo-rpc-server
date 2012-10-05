@@ -1,9 +1,7 @@
 package MojoRPC::Controller::Call;
 use Mojo::Base 'Mojolicious::Controller';
 use Class::Method::Modifiers;
-use MojoRPC::Request;
 use Scalar::Util qw(blessed);
-use Data::Dumper;
 use MojoRPC::Parameters;
 use MojoRPC::ResponseFormatter;
 use MojoRPC::MethodChain;

@@ -2,6 +2,7 @@ package MojoRPC;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use MIME::Base64;
+use MojoRPC::MethodAccessControll;
 
 # This method will run once at server start
 sub startup {
@@ -10,6 +11,7 @@ sub startup {
   $self->_load_config();
   $self->_load_apikeys();
   $self->_load_routing();
+  $self->_load_whitelist();
   $self->plugin('ValidateTiny');
   $self->_add_paths_to_inc();
 }
@@ -81,6 +83,12 @@ sub _add_paths_to_inc {
       }
     }
   }
+}
+
+sub _load_whitelist {
+  my $self = shift;
+
+  MojoRPC::MethodAccessControll::set_whitelist($self->config->{whitelist});
 }
 
 1;
