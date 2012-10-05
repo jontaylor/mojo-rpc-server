@@ -1,6 +1,6 @@
 package MojoRPC::Server::MethodCall;
 use Mojo::Base -base;
-use MojoRPC::Server::MethodAccessControll;
+use MojoRPC::Server::MethodAccessControl;
 use Scalar::Util qw(blessed);
 
 has [qw( method_name parameters call_type wants )];
@@ -99,7 +99,7 @@ sub check_permissions {
   my $self = shift;
   my $object_or_class = shift;
 
-  my $access_control = MojoRPC::Server::MethodAccessControll->new({ method => $self->method_name, class=> $object_or_class});
+  my $access_control = MojoRPC::Server::MethodAccessControl->new({ method => $self->method_name, class=> $object_or_class});
   return $access_control->valid();
 
 }

@@ -1,4 +1,4 @@
-package MojoRPC::Server::MethodAccessControll;
+package MojoRPC::Server::MethodAccessControl;
 use Mojo::Base -base;
 use Scalar::Util qw(blessed);
 
