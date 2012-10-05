@@ -1,12 +1,12 @@
-package MojoRPC::Controller::Call;
+package MojoRPC::Server::Controller::Call;
 use Mojo::Base 'Mojolicious::Controller';
 use Class::Method::Modifiers;
 use Scalar::Util qw(blessed);
-use MojoRPC::Parameters;
-use MojoRPC::ResponseFormatter;
-use MojoRPC::MethodChain;
+use MojoRPC::Server::Parameters;
+use MojoRPC::Server::ResponseFormatter;
+use MojoRPC::Server::MethodChain;
 
-around ['call'] => sub { MojoRPC::Controller::Call::validate_params(@_) };
+around ['call'] => sub { MojoRPC::Server::Controller::Call::validate_params(@_) };
 
 sub call {
   my $self = shift;
@@ -14,8 +14,8 @@ sub call {
   my $parameters = $self->param('params');  
   my $class = $self->param('class');
 
-  my $parameter_parser = MojoRPC::Parameters->new({parameter_type => $parameter_type, parameters => $parameters});
-  my $method_chain = MojoRPC::MethodChain->new({class => $class, methods => $parameter_parser->parse()});
+  my $parameter_parser = MojoRPC::Server::Parameters->new({parameter_type => $parameter_type, parameters => $parameters});
+  my $method_chain = MojoRPC::Server::MethodChain->new({class => $class, methods => $parameter_parser->parse()});
 
   my $result;
   eval {
@@ -30,7 +30,7 @@ sub call {
     }  
   }
 
-  my $response_formatter = MojoRPC::ResponseFormatter->new({ method_return_value => $result });
+  my $response_formatter = MojoRPC::Server::ResponseFormatter->new({ method_return_value => $result });
   $self->render_json($response_formatter->json);
 }
 

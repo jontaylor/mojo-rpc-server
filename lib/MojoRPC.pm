@@ -2,7 +2,7 @@ package MojoRPC;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use MIME::Base64;
-use MojoRPC::MethodAccessControll;
+use MojoRPC::Server::MethodAccessControll;
 
 # This method will run once at server start
 sub startup {
@@ -69,7 +69,7 @@ sub _load_routing {
   my $self = shift;
   my $r = $self->routes;
 
-  $r->namespace('MojoRPC::Controller');
+  $r->namespace('MojoRPC::Server::Controller');
   $r->route('/call/:parameter_type/:class/:params', params => qr/.*/)->to(controller => 'Call', action => 'call', params => undef);
 }
 
@@ -89,7 +89,7 @@ sub _add_paths_to_inc {
 sub _load_whitelist {
   my $self = shift;
 
-  MojoRPC::MethodAccessControll::set_whitelist($self->config->{whitelist});
+  MojoRPC::Server::MethodAccessControll::set_whitelist($self->config->{whitelist});
 }
 
 1;

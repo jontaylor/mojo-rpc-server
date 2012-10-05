@@ -1,4 +1,4 @@
-package MojoRPC::ResponseFormatter;
+package MojoRPC::Server::ResponseFormatter;
 use Mojo::Base -base;
 use Scalar::Util qw( blessed );
 

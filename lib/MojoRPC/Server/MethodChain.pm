@@ -1,4 +1,4 @@
-package MojoRPC::MethodChain;
+package MojoRPC::Server::MethodChain;
 use Mojo::Base -base;
 
 has [qw( class methods )];

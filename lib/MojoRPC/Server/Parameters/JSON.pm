@@ -1,5 +1,5 @@
-package MojoRPC::Parameters::JSON;
-use Mojo::Base 'MojoRPC::Parameters';
+package MojoRPC::Server::Parameters::JSON;
+use Mojo::Base 'MojoRPC::Server::Parameters';
 use JSON::XS;
 
 sub decode {

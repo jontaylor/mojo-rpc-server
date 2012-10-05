@@ -1,5 +1,5 @@
-package MojoRPC::Parameters::Simple;
-use Mojo::Base 'MojoRPC::Parameters';
+package MojoRPC::Server::Parameters::Simple;
+use Mojo::Base 'MojoRPC::Server::Parameters';
 
 sub decode {
   my $self = shift;

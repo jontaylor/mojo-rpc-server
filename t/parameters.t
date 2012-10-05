@@ -6,6 +6,6 @@ use Data::Dumper;
 
 my $t = Test::Mojo->new('MojoRPC');
 
-BEGIN { use_ok('MojoRPC::Controller::Call') };
+BEGIN { use_ok('MojoRPC::Server::Controller::Call') };
 
 done_testing();

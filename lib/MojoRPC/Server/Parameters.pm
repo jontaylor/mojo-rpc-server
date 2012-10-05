@@ -1,9 +1,9 @@
-package MojoRPC::Parameters;
+package MojoRPC::Server::Parameters;
 use Mojo::Base -base;
 use Class::Method::Delegate;
-use MojoRPC::Parameters::JSON;
-use MojoRPC::Parameters::SIMPLE;
-use MojoRPC::MethodCall;
+use MojoRPC::Server::Parameters::JSON;
+use MojoRPC::Server::Parameters::SIMPLE;
+use MojoRPC::Server::MethodCall;
 use Carp qw( carp croak );
 
 has [qw( parameter_type parameters )];
@@ -17,11 +17,11 @@ sub parse {
 
   #The first thing in needs to be a method
   my $first_method = shift(@parsed_parameters);
-  croak "Not a method" unless my $method_obj = MojoRPC::MethodCall->parse_method($first_method);
+  croak "Not a method" unless my $method_obj = MojoRPC::Server::MethodCall->parse_method($first_method);
   push @chain, $method_obj;
 
   foreach my $param(@parsed_parameters) {
-    if( my $new_obj = MojoRPC::MethodCall->parse_method($param) ) { 
+    if( my $new_obj = MojoRPC::Server::MethodCall->parse_method($param) ) { 
       $method_obj = $new_obj;
       push @chain, $method_obj; 
     }
@@ -36,8 +36,8 @@ sub parse {
 sub parser {
   my $self = shift;
 
-  if(lc($self->parameter_type) eq "json") { return MojoRPC::Parameters::JSON->new() }
-  if(lc($self->parameter_type) eq "simple") { return MojoRPC::Parameters::Simple->new() }
+  if(lc($self->parameter_type) eq "json") { return MojoRPC::Server::Parameters::JSON->new() }
+  if(lc($self->parameter_type) eq "simple") { return MojoRPC::Server::Parameters::Simple->new() }
 }
 
 sub delegated_by {
