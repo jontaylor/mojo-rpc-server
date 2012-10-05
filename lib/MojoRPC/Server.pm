@@ -1,4 +1,4 @@
-package MojoRPC;
+package MojoRPC::Server;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use MIME::Base64;
