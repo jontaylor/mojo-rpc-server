@@ -1,0 +1,2 @@
+#/usr/bin/env bash
+MOJO_MODE=test script/mojo_rpc test

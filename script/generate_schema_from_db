@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+#dbicdump -o dump_directory=lib -o components='["InflateColumn::DateTime"]' -o debug=1 -o use_moose=0  MojoRPC::Schema::STP 'dbi:mysql:dbname=stp_live' root

@@ -1,0 +1,1 @@
+cpanm Class::Method::Modifiers Mojo::Base POSIX utf8 DBIx::Class DateTime Digest::SHA1 Modern::Perl File::Basename File::Spec::Functions Devel::REPL Plack::Builder Test::More Test::Mojo Mojolicious::Plugin::Authentication DBIx::Class::Schema Mojolicious::Plugin::Mail Mojolicious::Plugin::ValidateTiny DateTime::Format::MySQL MIME::Base64
