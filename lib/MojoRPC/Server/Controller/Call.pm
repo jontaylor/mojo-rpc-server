@@ -53,8 +53,6 @@ sub call {
   
 }
 
-
-
 sub validate_params {
   my $next = shift;
   my $self = shift;
