@@ -13,9 +13,10 @@ sub json {
     my $id = $self->method_return_value->can('id') ? $self->method_return_value->id() : $self->method_return_value->{id};
     $response_hash->{id} = $id if $id;
     $response_hash->{class} = ref($self->method_return_value);
+    #We don't actually need the data if its an object thats returned - We could save on parsing objects...
+    $response_hash->{data} = undef;
   }
-  #We don't actually need the data if its an object thats returned - We could save on parsing objects...
-  $response_hash->{data} = undef;
+
 
   return $response_hash;
 
