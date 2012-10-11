@@ -1,12 +1,20 @@
 {
-  mail => {
-    from => 'no-reply@test.domain.com',
-    type => 'text/html',
-    how => 'smtp',
-    howargs => [ 'localhost', Timeout=>60 ]
-  },
   apikeys => {
-    'development:12345678' => 1
-  }
+    'username:password' => 1
+  },
+  whitelist => {
+    'remote::class' => {
+      method1 => 1,
+      method2 => 1,     
+    },
+  },
+  libs => [
+    {
+      paths => [ '/home/user/my_custom_libs' ], 
+      requires => [ 'MyModule::Init' ]
+    },
+
+
+  ]
   
 }

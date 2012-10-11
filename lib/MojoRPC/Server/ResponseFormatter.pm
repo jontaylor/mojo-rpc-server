@@ -15,9 +15,7 @@ sub json {
     $response_hash->{class} = ref($self->method_return_value);
   }
 
-
   return $response_hash;
-
 }
 
 1;
