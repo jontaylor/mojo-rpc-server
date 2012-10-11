@@ -1,1 +1,7 @@
-Author: Jon Taylor jon@stackhaus.com
+This is an RPC webserver written in Mojolicious.
+
+Simply clone it, update the config to whitelist which Classes and Methods are allowed and off you go.
+
+In the config you can specify extra lib directories to load in, and any modules that need requiring at startup for them.
+
+Look at mojo-rpc-client for a client module for this server.
