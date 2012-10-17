@@ -27,7 +27,7 @@ sub call {
       $self->render_400($@);
     }
     else {
-      $self->render_500("Something went wrong");
+      $self->render( status => '500', text =>"Something went wrong");
     }  
   }
 
@@ -63,7 +63,7 @@ sub validate_params {
   ];
 
   unless( $self->do_validation($validation_rules) ) {
-    $self->render_500($self->validator_any_error);
+    $self->render( status => '500', text =>$self->validator_any_error);
     return undef;
   }
   return $self->$next(@_);
