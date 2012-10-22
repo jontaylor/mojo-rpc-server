@@ -6,6 +6,8 @@ use MojoRPC::Server::Parameters;
 use MojoRPC::Server::ResponseFormatter;
 use MojoRPC::Server::MethodChain;
 use Time::HiRes qw(alarm);
+use Data::Dumper;
+use URI::Escape;
 
 around ['call'] => sub { MojoRPC::Server::Controller::Call::validate_params(@_) };
 
@@ -14,6 +16,16 @@ sub call {
   my $parameter_type = $self->param('parameter_type');
   my $parameters = $self->param('params');  
   my $class = $self->param('class');
+
+  if($self->req->method eq "GET") {
+    $parameters = uri_unescape($parameters);
+  }
+
+  if($self->app->mojo_mode eq "development") {
+    print Dumper "Request Type is " . $self->req->method;
+    print Dumper "Class: $class";
+    print Dumper "Parameters (first 100 chars): " . substr($parameters, 0, 100);
+  }
 
   my $parameter_parser = MojoRPC::Server::Parameters->new({parameter_type => $parameter_type, parameters => $parameters});
   my $method_chain = MojoRPC::Server::MethodChain->new({class => $class, methods => $parameter_parser->parse()});

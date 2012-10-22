@@ -8,6 +8,7 @@ use MojoRPC::Server::MethodAccessControl;
 sub startup {
   my $self = shift;
 
+  $self->_set_defaults();
   $self->_load_config();
   $self->_load_apikeys();
   $self->_load_routing();
@@ -31,6 +32,12 @@ sub UNIVERSAL::TO_JSON {
   return { %$self };
 }
 
+sub _set_defaults {
+  my $self = shift;
+
+  # Increase limit to 1GB
+  $ENV{MOJO_MAX_MESSAGE_SIZE} = 1073741824;
+}
 
 sub mojo_mode {
   my $self = shift;
@@ -70,7 +77,9 @@ sub _load_routing {
   my $r = $self->routes;
 
   $r->namespace('MojoRPC::Server::Controller');
-  $r->route('/call/:parameter_type/:class/:params', params => qr/.*/)->to(controller => 'Call', action => 'call', params => undef);
+  $r->route('/call/:parameter_type/:class/:params', params => qr/.*/)->via('GET')->to(controller => 'Call', action => 'call', params => undef);
+  $r->route('/call/:parameter_type/:class/')->via('POST')->to(controller => 'Call', action => 'call');
+
 }
 
 sub _add_paths_to_inc {
