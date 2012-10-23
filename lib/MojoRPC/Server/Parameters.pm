@@ -2,7 +2,7 @@ package MojoRPC::Server::Parameters;
 use Mojo::Base -base;
 use Class::Method::Delegate;
 use MojoRPC::Server::Parameters::JSON;
-use MojoRPC::Server::Parameters::SIMPLE;
+use MojoRPC::Server::Parameters::Simple;
 use MojoRPC::Server::MethodCall;
 use Carp qw( carp croak );
 
