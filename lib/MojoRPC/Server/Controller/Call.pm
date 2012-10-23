@@ -51,7 +51,9 @@ sub call {
     alarm 5; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
     $self->render_json($response_formatter->json);
     alarm 0;
-  } or do {
+  };
+  if($@) {
+    alarm 0;
     if($@ eq "Timed out in recursive JSON call") {
       #Time out
       $self->render_exception($@) and return;
@@ -59,7 +61,6 @@ sub call {
     else {
       #Died for some other reason
     }
-    alarm 0;
     die $@;  
   }
   
