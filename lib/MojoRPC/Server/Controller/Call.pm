@@ -35,12 +35,12 @@ sub call {
     $result = $method_chain->result();
   };
   if($@) {
-    if($self->app->mojo_mode eq "development") {
+    # if($self->app->mojo_mode eq "development") { #Since you wouldn't expose this directly to outside we might aswell always show the correct error
       $self->render_400($@);
-    }
-    else {
-      $self->render( status => '500', text =>"Something went wrong");
-    }  
+    # }
+    # else {
+    #   $self->render( status => '500', text =>"Something went wrong");
+    # }  
   }
 
   my $response_formatter = MojoRPC::Server::ResponseFormatter->new({ method_return_value => $result });

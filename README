@@ -5,3 +5,13 @@ Simply clone it, update the config to whitelist which Classes and Methods are al
 In the config you can specify extra lib directories to load in, and any modules that need requiring at startup for them.
 
 Look at mojo-rpc-client for a client module for this server.
+
+For running with hypnotoad do the following
+
+MOJO_MODE=uat hypnotoad ./script/mojo_rpc 
+
+Replace uat with the config you want to use
+
+make sure you have a line like this in your config
+
+hypnotoad => {listen => ['http://*:8005'], workers => 10},
