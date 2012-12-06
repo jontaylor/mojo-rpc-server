@@ -35,12 +35,7 @@ sub call {
     $result = $method_chain->result();
   };
   if($@) {
-    # if($self->app->mojo_mode eq "development") { #Since you wouldn't expose this directly to outside we might aswell always show the correct error
-      $self->render_400($@);
-    # }
-    # else {
-    #   $self->render( status => '500', text =>"Something went wrong");
-    # }  
+    $self->render_text_exception($@) and return;
   }
 
   my $response_formatter = MojoRPC::Server::ResponseFormatter->new({ method_return_value => $result });
@@ -49,19 +44,20 @@ sub call {
   eval {
     local $SIG{ ALRM } = sub { die "Timed out in recursive JSON call" };
     alarm 5; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
-    $self->render_json($response_formatter->json);
+    my $json = $response_formatter->json;
+    $self->render_json($json);
     alarm 0;
   };
   if($@) {
     alarm 0;
     if($@ eq "Timed out in recursive JSON call") {
       #Time out
-      $self->render_exception($@) and return;
+      $self->render_text_exception($@) and return;
     }
     else {
       #Died for some other reason
     }
-    die $@;  
+    $self->render_text_exception($@);  
   }
   
 }
@@ -76,16 +72,19 @@ sub validate_params {
   ];
 
   unless( $self->do_validation($validation_rules) ) {
-    $self->render( status => '500', text =>$self->validator_any_error);
+    $self->render( status => 500, text =>$self->validator_any_error);
     return undef;
   }
   return $self->$next(@_);
 }
 
-sub render_400 {
+sub render_text_exception {
   my $self = shift;
   my $error = shift;
-  $self->render( status => '400', text => $error ); 
+
+  my @stacktrace = map { $_->[1] . ":" . $_->[2] } @{$error->frames};
+
+  $self->render( status => 500, text => $error->to_string . "\n" . join("\n", @stacktrace ) ."\n"); 
 }
 
 1;

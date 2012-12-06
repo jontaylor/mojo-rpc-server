@@ -20,7 +20,7 @@ $repl->load_plugin($_) for qw(History LexEnv);
 $repl->eval('
   use MojoRPC::Server; 
   use Data::Dumper;
-  my $app = MojoRPC->new();
+  my $app = MojoRPC::Server->new();
   $app->startup();
 
 ');

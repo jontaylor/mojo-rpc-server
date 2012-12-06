@@ -21,9 +21,11 @@ sub json {
     my $id = $self->method_return_value->can('id') ? $self->method_return_value->id() : $self->method_return_value->{id};
     $response_hash->{id} = $id if $id;
     $response_hash->{class} = ref($self->method_return_value);
+    $response_hash->{data} = $self->method_return_value->TO_JSON;
   }
-
-  $response_hash->{data} = $self->method_return_value;
+  else {
+     $response_hash->{data} = $self->method_return_value;
+  }   
 
   return $response_hash;
 }
