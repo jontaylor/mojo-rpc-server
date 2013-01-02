@@ -43,7 +43,7 @@ sub call {
   #Try and prevent the server from locking up for bad objects that self reference
   eval {
     local $SIG{ ALRM } = sub { die "Timed out in recursive JSON call" };
-    alarm 5; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
+    alarm 10; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
     my $json = $response_formatter->json;
     $self->render_json($json);
     alarm 0;
@@ -81,8 +81,14 @@ sub validate_params {
 sub render_text_exception {
   my $self = shift;
   my $error = shift;
+  my @stacktrace;
 
-  my @stacktrace = map { $_->[1] . ":" . $_->[2] } @{$error->frames};
+  if(blessed $error && $error->can('frames')) {
+    @stacktrace = map { $_->[1] . ":" . $_->[2] } @{$error->frames};
+  }
+  else {
+    @stacktrace = ( $error );
+  }
 
   $self->render( status => 500, text => $error->to_string . "\n" . join("\n", @stacktrace ) ."\n"); 
 }
