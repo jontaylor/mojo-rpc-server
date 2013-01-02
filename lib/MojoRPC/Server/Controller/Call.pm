@@ -85,12 +85,13 @@ sub render_text_exception {
 
   if(blessed $error && $error->can('frames')) {
     @stacktrace = map { $_->[1] . ":" . $_->[2] } @{$error->frames};
+    $self->render( status => 500, text => $error->to_string . "\n" . join("\n", @stacktrace ) ."\n"); 
   }
   else {
-    @stacktrace = ( $error );
+    $self->render( status => 500, text => $error ."\n"); 
   }
 
-  $self->render( status => 500, text => $error->to_string . "\n" . join("\n", @stacktrace ) ."\n"); 
+  
 }
 
 1;
