@@ -76,7 +76,7 @@ sub _load_routing {
   my $self = shift;
   my $r = $self->routes;
 
-  $r->namespace('MojoRPC::Server::Controller');
+  $r->namespaces(['MojoRPC::Server::Controller']);
   $r->route('/call/:parameter_type/:class/:params', params => qr/.*/)->via('GET')->to(controller => 'Call', action => 'call', params => undef);
   $r->route('/call/:parameter_type/:class/')->via('POST')->to(controller => 'Call', action => 'call');
 
