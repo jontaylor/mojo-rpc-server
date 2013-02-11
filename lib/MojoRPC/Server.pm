@@ -86,7 +86,7 @@ sub _add_paths_to_inc {
   my $self = shift;
 
   foreach my $lib(@{$self->config->{libs}}) {
-    push @INC, @{$lib->{paths}};
+    unshift @INC, @{$lib->{paths}};
     if($lib->{requires}) {
       foreach my $module (@{$lib->{requires}}) {
         eval "require $module";
