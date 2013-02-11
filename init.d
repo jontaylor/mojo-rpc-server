@@ -1,16 +1,13 @@
-#!/bin/sh
-
-# source function library
-. /etc/init.d/functions
+#!/bin/bash
 
 RETVAL=0
 prog="Mojo-RPC Server"
 working_directory="/opt/mojo-rpc-server"
-application_file="./script/mojo-rpc"
+application_file="./script/mojo_rpc"
 mojo_mode="production"
 
 start() {
-        echo -n $"Starting $prog: "
+        echo -n "Starting $prog: "
         if [ $UID -ne 0 ]; then
                 RETVAL=1
                 failure
@@ -25,7 +22,7 @@ start() {
 }
 
 stop() {
-        echo -n $"Stopping $prog: "
+        echo -n "Stopping $prog: "
         if [ $UID -ne 0 ]; then
                 RETVAL=1
                 failure
@@ -33,7 +30,6 @@ stop() {
                 cd $working_directory
                 MOJO_MODE=$mojo_mode hypnotoad $application_file --stop
                 RETVAL=$?
-                [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/milter-greylist
         [ $RETVAL -eq 0 ] && success || failure
         fi;
         echo
@@ -43,6 +39,14 @@ stop() {
 restart(){
     stop
     start
+}
+
+success() { 
+  echo -n "Success"
+}
+
+failure() {
+  echo -n "Failure"
 }
 
 case "$1" in
