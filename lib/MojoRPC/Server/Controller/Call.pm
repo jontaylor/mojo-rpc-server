@@ -45,7 +45,7 @@ sub call {
     local $SIG{ ALRM } = sub { die "Timed out in recursive JSON call" };
     alarm 10; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
     my $json = $response_formatter->json;
-    $self->render_json($json);
+    $self->render(json => $json);
     alarm 0;
   };
   if($@) {
