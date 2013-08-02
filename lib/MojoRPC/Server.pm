@@ -37,6 +37,8 @@ sub _set_defaults {
 
   # Increase limit to 1GB
   $ENV{MOJO_MAX_MESSAGE_SIZE} = 1073741824;
+  $self->types->type(json => 'application/json; charset=utf-8');
+
 }
 
 sub mojo_mode {
