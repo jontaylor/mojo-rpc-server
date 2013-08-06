@@ -4,15 +4,9 @@ use Scalar::Util qw(blessed);
 
 has [qw( method class )];
 
-our $whitelist;
-
-sub set_whitelist {
-  $whitelist = shift;
-}
-
-sub whitelist {
-  return $whitelist;
-}
+has whitelist => sub {
+  return MojoRPC::Server::Whitelist->new();
+};
 
 sub valid {
   my $self = shift;
@@ -29,13 +23,18 @@ sub class_name {
 
 sub valid_class {
   my $self = shift;
-  $self->whitelist->{$self->class_name};
+
+  my $class = $self->class();
+
+  eval "require $class" or return 0;
+
+  $self->whitelist->class_listed($self->class);
 }
 
 sub valid_method {
   my $self = shift;
 
-  $self->whitelist->{$self->class_name}->{$self->method};
+  $self->whitelist->class_and_method_allowed($self->class, $self->method);
 }
 
 1;

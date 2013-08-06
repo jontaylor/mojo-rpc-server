@@ -11,4 +11,13 @@ my $lib = join('/', @base, 'lib');
 
 # Start commands for application
 require Mojolicious::Commands;
-Mojolicious::Commands->start_app('MojoRPC::Server');
+my $server = Mojolicious::Commands->start_app('MojoRPC::Server');
+
+$SIG{__WARN__} = sub {
+    my  $message = shift;
+    $message =~ s/\n$//;
+    @_ = ($server->log, $message);
+    goto &Mojo::Log::warn;
+};
+
+return $server;

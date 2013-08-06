@@ -2,7 +2,7 @@ package MojoRPC::Server;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use MIME::Base64;
-use MojoRPC::Server::MethodAccessControl;
+use MojoRPC::Server::Whitelist;
 
 # This method will run once at server start
 sub startup {
@@ -100,7 +100,7 @@ sub _add_paths_to_inc {
 sub _load_whitelist {
   my $self = shift;
 
-  MojoRPC::Server::MethodAccessControl::set_whitelist($self->config->{whitelist});
+  MojoRPC::Server::Whitelist->new->add($self->config->{whitelist});
 }
 
 1;
