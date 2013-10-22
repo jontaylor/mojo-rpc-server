@@ -4,8 +4,6 @@ use Test::More ;
 use Test::Mojo;
 use Data::Dumper;
 
-my $t = Test::Mojo->new('MojoRPC::Server');
-
 BEGIN { 
   use_ok('MojoRPC::Server::Parameters'); 
   use_ok('MojoRPC::Server::MethodCall');
@@ -42,5 +40,15 @@ my @simple_result = $simple_parameter_object->parse();
 
 is( Dumper(\@simple_result), Dumper (\@expected_result));
 is( Dumper(\@json_result), Dumper (\@expected_result));
+
+my $james_search_json = '["$->search","where","(description LIKE ?) OR (overridedescription LIKE ?)","vars",["%daisy%","%daisy%"],"limit",10,"order_by","description"]';
+my $james_pm = new_ok("MojoRPC::Server::Parameters" => [ parameter_type => 'json', parameters => $james_search_json ]);
+
+my $result = $james_pm->parse();
+
+
+
+
+
 
 done_testing();

@@ -70,7 +70,6 @@ sub _load_apikeys {
     my $user = (split(':', $request_api_key))[0];
 
     $app->stash({role => $user});
-
   });
 }
 

@@ -18,7 +18,7 @@ sub call {
   my $class = $self->param('class');
 
   if($self->req->method eq "GET") {
-    $parameters = uri_unescape($parameters);
+    #$parameters = uri_unescape($parameters); - Test by James demonstrates that this isn't required
   }
 
   if($self->app->mojo_mode eq "development") {
