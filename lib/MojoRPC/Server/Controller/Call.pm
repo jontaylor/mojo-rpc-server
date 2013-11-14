@@ -68,7 +68,7 @@ sub validate_params {
 
   my $validation_rules = [
      [qw/class method/] => Validate::Tiny::is_required(),   
-     class          => sub { eval "require ". $self->param('class') ? undef : "Class not found" },
+     class          => sub { eval "require ". $self->param('class') ? undef : "Class: ". $self->param('class') ." not found" },
   ];
 
   unless( $self->do_validation($validation_rules) ) {

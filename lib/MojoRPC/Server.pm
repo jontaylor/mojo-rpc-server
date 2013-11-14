@@ -88,12 +88,15 @@ sub _add_paths_to_inc {
 
   foreach my $lib(@{$self->config->{libs}}) {
     unshift @INC, @{$lib->{paths}};
+  }
+  foreach my $lib(@{$self->config->{libs}}) {
     if($lib->{requires}) {
       foreach my $module (@{$lib->{requires}}) {
-        eval "require $module";
+        eval "require $module" or die "$module could not be required " . $@;
       }
     }
   }
+
 }
 
 sub _load_whitelist {
