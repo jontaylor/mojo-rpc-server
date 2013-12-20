@@ -25,6 +25,7 @@ sub call {
     print Dumper "Request Type is " . $self->req->method;
     print Dumper "Class: $class";
     print Dumper "Parameters (first 100 chars): " . substr($parameters, 0, 100);
+    print Dumper "Requested timeout: " . $self->req->headers->header("RPC-Timeout") || "Not specified";
   }
 
   my $parameter_parser = MojoRPC::Server::Parameters->new({parameter_type => $parameter_type, parameters => $parameters});

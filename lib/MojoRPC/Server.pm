@@ -15,6 +15,7 @@ sub startup {
   $self->_load_whitelist();
   $self->plugin('ValidateTiny');
   $self->_add_paths_to_inc();
+  $self->_support_gzip();
 }
 
 #Have a reasonable go at converting ANY blessed reference to a json compatible hash
@@ -30,6 +31,35 @@ sub UNIVERSAL::TO_JSON {
   }
 
   return { %$self };
+}
+
+sub _support_gzip {
+  my $self = shift;
+
+
+
+  $self->hook(after_render => sub {
+    my ($c, $output, $format) = @_;
+
+    # Check if "gzip => 1" has been set in the stash
+    return unless $self->config->{gzip};
+
+    eval { require IO::Compress::Gzip; IO::Compress::Gzip->import(); 1 };
+    if($@) {
+      warn "gzip not available";
+      return;
+    }
+
+    # Check if user agent accepts GZip compression
+    return unless ($c->req->headers->accept_encoding // '') =~ /gzip/i;
+    $c->res->headers->append(Vary => 'Accept-Encoding');
+
+    # Compress content with GZip
+    $c->res->headers->content_encoding('gzip');
+    IO::Compress::Gzip::gzip( $output, \my $compressed);
+    $$output = $compressed;
+  });
+
 }
 
 sub _set_defaults {
