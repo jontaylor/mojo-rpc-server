@@ -36,8 +36,6 @@ sub UNIVERSAL::TO_JSON {
 sub _support_gzip {
   my $self = shift;
 
-
-
   $self->hook(after_render => sub {
     my ($c, $output, $format) = @_;
 

@@ -39,27 +39,9 @@ sub call {
     $self->render_text_exception($@) and return;
   }
 
-  my $response_formatter = MojoRPC::Server::ResponseFormatter->new({ method_return_value => $result });
+  my $response_formatter = MojoRPC::Server::ResponseFormatter->factory({ controller => $self, method_return_value => $result });
 
-  #Try and prevent the server from locking up for bad objects that self reference
-  eval {
-    local $SIG{ ALRM } = sub { die "Timed out in recursive JSON call" };
-    alarm $self->req->headers->header("RPC-Timeout") || 10; #We aren't a websocket/comet server so don't keep us blocked for more than 5 seconds
-    my $json = $response_formatter->json;
-    $self->render(json => $json);
-    alarm 0;
-  };
-  if($@) {
-    alarm 0;
-    if($@ eq "Timed out in recursive JSON call") {
-      #Time out
-      $self->render_text_exception($@) and return;
-    }
-    else {
-      #Died for some other reason
-    }
-    $self->render_text_exception($@);  
-  }
+  $response_formatter->render();
   
 }
 
