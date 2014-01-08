@@ -11,7 +11,7 @@ sub factory {
   my $class = shift;
   my $options = shift;
 
-  return MojoRPC::Server::ResponseFormatter::JSON->new($options) if ref($options->{method_return_value}); #Refs always respond with JSON
+  return MojoRPC::Server::ResponseFormatter::JSON->new($options) if ref($options->{method_return_value}) || !defined($options->{method_return_value}); #Refs always respond with JSON
   
   return MojoRPC::Server::ResponseFormatter::Raw->new($options) if ($options->{controller}->req->headers->accept // '') =~ /application\/octet-stream/i;
 
