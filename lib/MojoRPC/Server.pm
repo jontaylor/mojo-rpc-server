@@ -16,7 +16,17 @@ sub startup {
   $self->plugin('ValidateTiny');
   $self->_add_paths_to_inc();
   $self->_support_gzip();
+  $self->_load_airbrake();
 }
+
+sub _load_airbrake {
+  my $self = shift;
+
+  return unless $self->config->{airbrake};
+
+  $self->plugin('Airbrake', $self->config->{airbrake})
+}
+
 
 #Have a reasonable go at converting ANY blessed reference to a json compatible hash
 #Might remove this method as its dirty and its specific to modules you might not be using
@@ -31,6 +41,22 @@ sub UNIVERSAL::TO_JSON {
   }
 
   return { %$self };
+
+  if($self->isa("HASH")) {
+       return %$self;
+  }
+
+  if($self->isa("ARRAY")) {
+       return @$self;
+  }
+
+  if($self->isa("SCALAR")) {
+       return $$self;
+  }
+  my $type = ref($self);
+  die "I don't know how to convert an object of type $type into something else";
+
+ }
 }
 
 sub _support_gzip {
