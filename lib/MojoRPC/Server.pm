@@ -40,8 +40,6 @@ sub UNIVERSAL::TO_JSON {
     return $self->summary_hash(); #some other DB ORM
   }
 
-  return { %$self };
-
   if($self->isa("HASH")) {
        return %$self;
   }
@@ -56,7 +54,6 @@ sub UNIVERSAL::TO_JSON {
   my $type = ref($self);
   die "I don't know how to convert an object of type $type into something else";
 
- }
 }
 
 sub _support_gzip {
