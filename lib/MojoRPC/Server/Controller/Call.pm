@@ -24,7 +24,7 @@ sub call {
   if($self->app->mojo_mode eq "development") {
     print Dumper "Request Type is " . $self->req->method;
     print Dumper "Class: $class";
-    print Dumper "Parameters (first 100 chars): " . substr($parameters, 0, 100);
+    print Dumper "Parameters (first 100 chars): " . substr($parameters, 0, 1000);
     print Dumper "Requested timeout: " . ($self->req->headers->header("RPC-Timeout") || "Not specified");
   }
 
@@ -55,7 +55,7 @@ sub validate_params {
   ];
 
   unless( $self->do_validation($validation_rules) ) {
-    $self->render( status => 500, text =>$self->validator_any_error);
+    $self->render( status => 500, text =>$self->validator_error_string);
     return undef;
   }
   return $self->$next(@_);
